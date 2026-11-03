@@ -193,7 +193,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
   private weak var delegate: ReviewViewControllerDelegate!
 
   private var session: ReviewSession!
-  private var totalReviewCount = 0
 
   private var lastMarkAnswerWasFirstTime = false
   private var ankiModeCachedSubmit = false
@@ -296,8 +295,6 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
     self.showSubjectHistory = showSubjectHistory
     self.delegate = delegate
     self.isPracticeSession = isPracticeSession
-    totalReviewCount = items.count
-
     session = ReviewSession(services: services, items: items,
                             isPracticeSession: isPracticeSession)
   }
@@ -831,7 +828,7 @@ class ReviewViewController: UIViewController, UITextFieldDelegate, SubjectDelega
             subject: subject,
             type: session.activeAssignment.subjectType,
             completed: session.reviewsCompleted,
-            total: totalReviewCount
+            total: totalLength
           )
         }
       }
