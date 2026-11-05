@@ -1,0 +1,26 @@
+name: iOS build check
+on:
+  push:
+    branches: [ci/ios-build-check]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v4
+      - run: sudo xcode-select -s /Applications/Xcode_16.4.app
+      # Unsigned simulator build; also builds the embedded ReviewLiveActivity extension.
+      - name: Build
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -workspace Tsurukame.xcworkspace -scheme Tsurukame \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO | tee build.log | tail -n 60
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: build-log
+          path: ios/build.log
